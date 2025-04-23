@@ -4,7 +4,7 @@
 // 	protoc        v3.12.4
 // source: proto/library/data_exchange_service.proto
 
-package library
+package library_proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -203,7 +203,7 @@ const file_proto_library_data_exchange_service_proto_rawDesc = "" +
 	"\x10ExchangeResponse\x12#\n" +
 	"\ris_successful\x18\x01 \x01(\bR\fisSuccessful2V\n" +
 	"\x13DataExchangeService\x12?\n" +
-	"\bExchange\x12\x18.library.ExchangeRequest\x1a\x19.library.ExchangeResponseB\x0fZ\r../..;libraryb\x06proto3"
+	"\bExchange\x12\x18.library.ExchangeRequest\x1a\x19.library.ExchangeResponseB4Z2github.com/noitcelfer7/library-proto;library_protob\x06proto3"
 
 var (
 	file_proto_library_data_exchange_service_proto_rawDescOnce sync.Once

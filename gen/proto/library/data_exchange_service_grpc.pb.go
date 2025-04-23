@@ -4,7 +4,7 @@
 // - protoc             v3.12.4
 // source: proto/library/data_exchange_service.proto
 
-package library
+package library_proto
 
 import (
 	context "context"
