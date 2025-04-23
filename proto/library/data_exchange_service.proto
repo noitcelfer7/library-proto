@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "../..;library";
+
+message ExchangeRequest {
+  string author_first_name = 1;
+  string author_last_name  = 2;
+
+  string book_isbn  = 3;
+  string book_title = 4;
+  
+  string issue_period      = 5;
+  string issue_return_date = 6;
+
+  string genre_title = 9;
+
+  string reader_first_name   = 10;
+  string reader_last_name    = 11;
+  string reader_phone_number = 12;
+}
+
+message ExchangeResponse {
+  bool is_successful = 1;
+}
+
+package library;
+
+service DataExchangeService {
+  rpc Exchange(ExchangeRequest) returns (ExchangeResponse);
+}
