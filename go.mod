@@ -1,4 +1,4 @@
-module library_proto
+module github.com/noitcelfer7/library-proto
 
 go 1.24.2
 
