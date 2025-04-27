@@ -9,14 +9,15 @@ message ExchangeRequest {
   string book_isbn  = 3;
   string book_title = 4;
   
-  string issue_period      = 5;
-  string issue_return_date = 6;
+           string issue_date        = 5;
+           string issue_period      = 6;
+  optional string issue_return_date = 7;
 
-  string genre_title = 9;
+  string genre_title = 8;
 
-  string reader_first_name   = 10;
-  string reader_last_name    = 11;
-  string reader_phone_number = 12;
+  string reader_first_name   = 9;
+  string reader_last_name    = 10;
+  string reader_phone_number = 11;
 }
 
 message ExchangeResponse {
