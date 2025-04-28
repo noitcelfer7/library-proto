@@ -27,5 +27,5 @@ message ExchangeResponse {
 package library;
 
 service DataExchangeService {
-  rpc Exchange(ExchangeRequest) returns (ExchangeResponse);
+  rpc Exchange(stream ExchangeRequest) returns (ExchangeResponse);
 }

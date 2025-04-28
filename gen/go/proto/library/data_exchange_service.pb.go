@@ -212,9 +212,9 @@ const file_proto_library_data_exchange_service_proto_rawDesc = "" +
 	"\x13reader_phone_number\x18\v \x01(\tR\x11readerPhoneNumberB\x14\n" +
 	"\x12_issue_return_date\"7\n" +
 	"\x10ExchangeResponse\x12#\n" +
-	"\ris_successful\x18\x01 \x01(\bR\fisSuccessful2V\n" +
-	"\x13DataExchangeService\x12?\n" +
-	"\bExchange\x12\x18.library.ExchangeRequest\x1a\x19.library.ExchangeResponseB4Z2github.com/noitcelfer7/library-proto;library_protob\x06proto3"
+	"\ris_successful\x18\x01 \x01(\bR\fisSuccessful2X\n" +
+	"\x13DataExchangeService\x12A\n" +
+	"\bExchange\x12\x18.library.ExchangeRequest\x1a\x19.library.ExchangeResponse(\x01B4Z2github.com/noitcelfer7/library-proto;library_protob\x06proto3"
 
 var (
 	file_proto_library_data_exchange_service_proto_rawDescOnce sync.Once

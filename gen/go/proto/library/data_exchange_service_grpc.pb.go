@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DataExchangeServiceClient interface {
-	Exchange(ctx context.Context, in *ExchangeRequest, opts ...grpc.CallOption) (*ExchangeResponse, error)
+	Exchange(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ExchangeRequest, ExchangeResponse], error)
 }
 
 type dataExchangeServiceClient struct {
@@ -37,21 +37,24 @@ func NewDataExchangeServiceClient(cc grpc.ClientConnInterface) DataExchangeServi
 	return &dataExchangeServiceClient{cc}
 }
 
-func (c *dataExchangeServiceClient) Exchange(ctx context.Context, in *ExchangeRequest, opts ...grpc.CallOption) (*ExchangeResponse, error) {
+func (c *dataExchangeServiceClient) Exchange(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ExchangeRequest, ExchangeResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ExchangeResponse)
-	err := c.cc.Invoke(ctx, DataExchangeService_Exchange_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &DataExchangeService_ServiceDesc.Streams[0], DataExchangeService_Exchange_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &grpc.GenericClientStream[ExchangeRequest, ExchangeResponse]{ClientStream: stream}
+	return x, nil
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type DataExchangeService_ExchangeClient = grpc.ClientStreamingClient[ExchangeRequest, ExchangeResponse]
 
 // DataExchangeServiceServer is the server API for DataExchangeService service.
 // All implementations must embed UnimplementedDataExchangeServiceServer
 // for forward compatibility.
 type DataExchangeServiceServer interface {
-	Exchange(context.Context, *ExchangeRequest) (*ExchangeResponse, error)
+	Exchange(grpc.ClientStreamingServer[ExchangeRequest, ExchangeResponse]) error
 	mustEmbedUnimplementedDataExchangeServiceServer()
 }
 
@@ -62,8 +65,8 @@ type DataExchangeServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDataExchangeServiceServer struct{}
 
-func (UnimplementedDataExchangeServiceServer) Exchange(context.Context, *ExchangeRequest) (*ExchangeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Exchange not implemented")
+func (UnimplementedDataExchangeServiceServer) Exchange(grpc.ClientStreamingServer[ExchangeRequest, ExchangeResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method Exchange not implemented")
 }
 func (UnimplementedDataExchangeServiceServer) mustEmbedUnimplementedDataExchangeServiceServer() {}
 func (UnimplementedDataExchangeServiceServer) testEmbeddedByValue()                             {}
@@ -86,23 +89,12 @@ func RegisterDataExchangeServiceServer(s grpc.ServiceRegistrar, srv DataExchange
 	s.RegisterService(&DataExchangeService_ServiceDesc, srv)
 }
 
-func _DataExchangeService_Exchange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ExchangeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DataExchangeServiceServer).Exchange(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DataExchangeService_Exchange_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DataExchangeServiceServer).Exchange(ctx, req.(*ExchangeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+func _DataExchangeService_Exchange_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DataExchangeServiceServer).Exchange(&grpc.GenericServerStream[ExchangeRequest, ExchangeResponse]{ServerStream: stream})
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type DataExchangeService_ExchangeServer = grpc.ClientStreamingServer[ExchangeRequest, ExchangeResponse]
 
 // DataExchangeService_ServiceDesc is the grpc.ServiceDesc for DataExchangeService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -110,12 +102,13 @@ func _DataExchangeService_Exchange_Handler(srv interface{}, ctx context.Context,
 var DataExchangeService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "library.DataExchangeService",
 	HandlerType: (*DataExchangeServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "Exchange",
-			Handler:    _DataExchangeService_Exchange_Handler,
+			StreamName:    "Exchange",
+			Handler:       _DataExchangeService_Exchange_Handler,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/library/data_exchange_service.proto",
 }
